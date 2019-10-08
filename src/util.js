@@ -30,14 +30,15 @@ export function monthDays (year, month, weekStart) {
     )
 }
 
-export function monthDayIsDisabled (minDate, maxDate, year, month, day) {
+export function monthDayIsDisabled (minDate, maxDate, disabledDates, year, month, day) {
   const date = DateTime.fromObject({ year, month, day, zone: 'UTC' })
 
   minDate = minDate ? startOfDay(minDate) : null
   maxDate = maxDate ? startOfDay(maxDate) : null
 
   return (minDate && date < minDate) ||
-         (maxDate && date > maxDate)
+         (maxDate && date > maxDate) ||
+         !!disabledDates.find(item => item.toFormat('D') === date.toFormat('D'))
 }
 
 export function monthIsDisabled (minDate, maxDate, year, month) {

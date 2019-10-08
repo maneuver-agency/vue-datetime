@@ -30,6 +30,7 @@
           :min-date="minDatetimeUTC"
           :max-date="maxDatetimeUTC"
           :week-start="weekStart"
+          :disabled-dates="disabledDates"
       ></datetime-calendar>
       <datetime-time-picker
           v-if="step === 'time'"
@@ -128,6 +129,9 @@ export default {
     showHeader: {
       type: Boolean,
       default: true
+    },
+    disabledDates: {
+      type: Array
     }
   },
 

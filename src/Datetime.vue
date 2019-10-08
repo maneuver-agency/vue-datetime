@@ -26,6 +26,7 @@
           :minute-step="minuteStep"
           :min-datetime="popupMinDatetime"
           :max-datetime="popupMaxDatetime"
+          :disabled-dates="popupDisabledDates"
           @confirm="confirm"
           @cancel="cancel"
           :auto="auto"
@@ -139,6 +140,12 @@ export default {
     showHeader: {
       type: Boolean,
       default: true
+    },
+    disabledDates: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
 
@@ -192,6 +199,9 @@ export default {
     },
     popupMaxDatetime () {
       return this.maxDatetime ? DateTime.fromISO(this.maxDatetime).setZone(this.zone) : null
+    },
+    popupDisabledDates  () {
+      return this.disabledDates.map(item => DateTime.fromISO(item).setZone(this.zone))
     }
   },
 
