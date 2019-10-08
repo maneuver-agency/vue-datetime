@@ -2,8 +2,10 @@
   <div class="vdatetime-popup">
     <div class="vdatetime-popup__header">
       <div class="vdatetime-popup__title" v-if="title">{{ title }}</div>
-      <div class="vdatetime-popup__year" @click="showYear" v-if="type !== 'time'">{{ year }}</div>
-      <div class="vdatetime-popup__date" @click="showMonth" v-if="type !== 'time'">{{ dateFormatted }}</div>
+      <template v-if="showHeader">
+        <div class="vdatetime-popup__year" @click="showYear" v-if="type !== 'time'">{{ year }}</div>
+        <div class="vdatetime-popup__date" @click="showMonth" v-if="type !== 'time'">{{ dateFormatted }}</div>
+      </template>
     </div>
     <div class="vdatetime-popup__body">
       <datetime-year-picker
@@ -122,6 +124,10 @@ export default {
     },
     title: {
       type: String
+    },
+    showHeader: {
+      type: Boolean,
+      default: true
     }
   },
 
