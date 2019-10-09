@@ -13,6 +13,8 @@ export function datetimeFromISO (string) {
 
 export function monthDays (year, month, weekStart) {
   const monthDate = DateTime.local(year, month, 1)
+  const prevMonthDate = monthDate.minus({months: 1})
+  const nextMonthDate = monthDate.plus({months: 1})
   let firstDay = monthDate.weekday - weekStart
 
   if (firstDay < 0) {
@@ -25,9 +27,16 @@ export function monthDays (year, month, weekStart) {
 
   return new Array(monthDate.daysInMonth + firstDay + lastDay)
     .fill(null)
-    .map((value, index) =>
-      (index + 1 <= firstDay || index >= firstDay + monthDate.daysInMonth) ? null : (index + 1 - firstDay)
-    )
+    .map((value, index) =>  {
+      if (index + 1 <= firstDay) {
+        return { day: prevMonthDate.daysInMonth - firstDay + index + 1, month: prevMonthDate.month }
+      }
+      if (index >= firstDay + monthDate.daysInMonth) {
+        return { day: index + 1 - monthDate.daysInMonth - firstDay, month: nextMonthDate.month }
+      }
+      return { day: index + 1 - firstDay, month: monthDate.month }
+      // (index + 1 <= firstDay || index >= firstDay + monthDate.daysInMonth) ? 0 : (index + 1 - firstDay)
+    })
 }
 
 export function monthDayIsDisabled (minDate, maxDate, disabledDates, year, month, day) {

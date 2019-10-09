@@ -31,6 +31,7 @@
           :max-date="maxDatetimeUTC"
           :week-start="weekStart"
           :disabled-dates="disabledDates"
+          :show-other-months="showOtherMonths"
       ></datetime-calendar>
       <datetime-time-picker
           v-if="step === 'time'"
@@ -132,6 +133,10 @@ export default {
     },
     disabledDates: {
       type: Array
+    },
+    showOtherMonths: {
+      type: Boolean,
+      default: false
     }
   },
 

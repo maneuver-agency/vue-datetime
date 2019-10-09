@@ -15,8 +15,16 @@
     </div>
     <div class="vdatetime-calendar__month">
       <div class="vdatetime-calendar__month__weekday" v-for="weekday in weekdays">{{ weekday }}</div>
-      <div class="vdatetime-calendar__month__day" v-for="day in days" @click="selectDay(day)" :class="{'vdatetime-calendar__month__day--selected': day.selected, 'vdatetime-calendar__month__day--disabled': day.disabled}">
-        <span><span>{{ day.number }}</span></span>
+      <div class="vdatetime-calendar__month__day" v-for="day in days" @click="selectDay(day)" 
+        :class="{
+          'vdatetime-calendar__month__day--selected': day.selected,
+          'vdatetime-calendar__month__day--disabled': day.disabled,
+          'vdatetime-calendar__month__day--other-month': day.month !== newMonth,
+        }"
+      >
+        <template v-if="day.month === newMonth || showOtherMonths">
+          <span><span>{{ day.number }}</span></span>
+        </template>
       </div>
     </div>
   </div>
@@ -57,6 +65,10 @@ export default {
     },
     disabledDates: {
       type: Array
+    },
+    showOtherMonths: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -79,10 +91,11 @@ export default {
       return this.months[this.newMonth - 1]
     },
     days () {
-      return monthDays(this.newYear, this.newMonth, this.weekStart).map(day => ({
+      return monthDays(this.newYear, this.newMonth, this.weekStart).map(({ day, month }) => ({
         number: day,
-        selected: day && this.year === this.newYear && this.month === this.newMonth && this.day === day,
-        disabled: !day || monthDayIsDisabled(this.minDate, this.maxDate, this.disabledDates, this.newYear, this.newMonth, day)
+        selected: day && this.year === this.newYear && this.month === this.newMonth && month === this.month && this.day === day,
+        disabled: !day || monthDayIsDisabled(this.minDate, this.maxDate, this.disabledDates, this.newYear, month, day),
+        month
       }))
     }
   },
@@ -91,6 +104,11 @@ export default {
     selectDay (day) {
       if (day.disabled) {
         return
+      }
+
+      if (day.month !== this.newMonth) {
+        // User clicked a day in the previous or next month
+        this.newDate = this.newDate.set({ month: day.month })
       }
 
       this.$emit('change', this.newYear, this.newMonth, day.number)

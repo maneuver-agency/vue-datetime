@@ -33,7 +33,9 @@
           :week-start="weekStart"
           :flow="flow"
           :title="title"
-          :show-header="showHeader">
+          :show-header="showHeader"
+          :show-other-months="showOtherMonths"
+        >
         <template slot="button-cancel__internal" slot-scope="scope">
           <slot name="button-cancel" v-bind:step="scope.step">{{ phrases.cancel }}</slot>
         </template>
@@ -146,6 +148,10 @@ export default {
       default () {
         return []
       }
+    },
+    showOtherMonths: {
+      type: Boolean,
+      default: false
     }
   },
 
