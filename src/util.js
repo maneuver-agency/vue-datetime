@@ -13,8 +13,8 @@ export function datetimeFromISO (string) {
 
 export function monthDays (year, month, weekStart) {
   const monthDate = DateTime.local(year, month, 1)
-  const prevMonthDate = monthDate.minus({months: 1})
-  const nextMonthDate = monthDate.plus({months: 1})
+  const prevMonthDate = monthDate.minus({ months: 1 })
+  const nextMonthDate = monthDate.plus({ months: 1 })
   let firstDay = monthDate.weekday - weekStart
 
   if (firstDay < 0) {
@@ -27,7 +27,7 @@ export function monthDays (year, month, weekStart) {
 
   return new Array(monthDate.daysInMonth + firstDay + lastDay)
     .fill(null)
-    .map((value, index) =>  {
+    .map((value, index) => {
       if (index + 1 <= firstDay) {
         return { day: prevMonthDate.daysInMonth - firstDay + index + 1, month: prevMonthDate.month }
       }
@@ -45,9 +45,13 @@ export function monthDayIsDisabled (minDate, maxDate, disabledDates, year, month
   minDate = minDate ? startOfDay(minDate) : null
   maxDate = maxDate ? startOfDay(maxDate) : null
 
+  const disabledDatetimes = disabledDates.filter(item => typeof item === 'object')
+  const disabledWeekdays = disabledDates.filter(item => typeof item === 'number')
+
   return (minDate && date < minDate) ||
          (maxDate && date > maxDate) ||
-         !!disabledDates.find(item => item.toFormat('D') === date.toFormat('D'))
+         !!disabledDatetimes.find(item => item.toFormat('D') === date.toFormat('D')) ||
+         disabledWeekdays.includes(date.weekday)
 }
 
 export function monthIsDisabled (minDate, maxDate, year, month) {

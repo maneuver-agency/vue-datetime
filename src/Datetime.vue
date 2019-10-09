@@ -207,7 +207,16 @@ export default {
       return this.maxDatetime ? DateTime.fromISO(this.maxDatetime).setZone(this.zone) : null
     },
     popupDisabledDates  () {
-      return this.disabledDates.map(item => DateTime.fromISO(item).setZone(this.zone))
+      return this.disabledDates.map(item => {
+        if (typeof item === 'number') {
+          return item
+        }
+        if (typeof item === 'string') {
+          const d = DateTime.fromISO(item).setZone(this.zone)
+          return d.isValid ? d : null
+        }
+      })
+      .filter(item => !!item) // remove null values
     }
   },
 
