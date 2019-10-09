@@ -88,8 +88,11 @@ export function months () {
   return Info.months().map(month => capitalize(month))
 }
 
-export function hours (step) {
+export function hours (step, range) {
   return new Array(Math.ceil(24 / step)).fill(null).map((item, index) => index * step)
+  .filter(hour => {
+    return range.length === 0 || (hour >= range[0] && hour <= range[1])
+  })
 }
 
 export function minutes (step) {

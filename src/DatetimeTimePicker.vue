@@ -3,7 +3,7 @@
     <div class="vdatetime-time-picker__list vdatetime-time-picker__list--hours" ref="hourList">
       <div class="vdatetime-time-picker__item" v-for="hour in hours" @click="selectHour(hour)" :class="{'vdatetime-time-picker__item--selected': hour.selected, 'vdatetime-time-picker__item--disabled': hour.disabled}">{{ formatHour(hour.number) }}</div>
     </div>
-    <div class="vdatetime-time-picker__list vdatetime-time-picker__list--minutes" ref="minuteList">
+    <div class="vdatetime-time-picker__list vdatetime-time-picker__list--minutes" ref="minuteList" v-if="minuteStep < 60">
       <div class="vdatetime-time-picker__item" v-for="minute in minutes" @click="selectMinute(minute)" :class="{'vdatetime-time-picker__item--selected': minute.selected, 'vdatetime-time-picker__item--disabled': minute.disabled}">{{ minute.number }}</div>
     </div>
     <div class="vdatetime-time-picker__list vdatetime-time-picker__list--suffix" ref="suffixList" v-if="use12Hour">
@@ -45,12 +45,18 @@ export default {
     maxTime: {
       type: String,
       default: null
+    },
+    hourRange: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
 
   computed: {
     hours () {
-      return hours(this.hourStep).filter(hour => {
+      return hours(this.hourStep, this.hourRange).filter(hour => {
         if (!this.use12Hour) {
           return true
         } else {
@@ -125,15 +131,23 @@ export default {
         }
         return numHour
       }
+
+      if (this.minuteStep === 60) {
+        return `${hour}:00`
+      }
+
       return hour
     }
   },
 
   mounted () {
     const selectedHour = this.$refs.hourList.querySelector('.vdatetime-time-picker__item--selected')
-    const selectedMinute = this.$refs.minuteList.querySelector('.vdatetime-time-picker__item--selected')
     this.$refs.hourList.scrollTop = selectedHour ? selectedHour.offsetTop - 250 : 0
-    this.$refs.minuteList.scrollTop = selectedMinute ? selectedMinute.offsetTop - 250 : 0
+
+    if (this.$refs.minuteList) {
+      const selectedMinute = this.$refs.minuteList.querySelector('.vdatetime-time-picker__item--selected')
+      this.$refs.minuteList.scrollTop = selectedMinute ? selectedMinute.offsetTop - 250 : 0
+    }
   }
 }
 </script>
@@ -141,6 +155,7 @@ export default {
 <style>
 .vdatetime-time-picker {
   box-sizing: border-box;
+  display: flex;
 
   &::after {
     content: '';
@@ -154,8 +169,9 @@ export default {
 }
 
 .vdatetime-time-picker__list {
-  float: left;
-  width: 50%;
+  /* float: left;
+  width: 50%; */
+  flex: 1 0 33.33%;
   height: 305px;
   overflow-y: scroll;
 
@@ -172,9 +188,9 @@ export default {
   }
 }
 
-.vdatetime-time-picker__with-suffix .vdatetime-time-picker__list {
+/* .vdatetime-time-picker__with-suffix .vdatetime-time-picker__list {
   width: 33.3%;
-}
+} */
 
 .vdatetime-time-picker__item {
   padding: 10px 0;

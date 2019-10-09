@@ -35,6 +35,7 @@
           :title="title"
           :show-header="showHeader"
           :show-other-months="showOtherMonths"
+          :hour-range="hourRange"
         >
         <template slot="button-cancel__internal" slot-scope="scope">
           <slot name="button-cancel" v-bind:step="scope.step">{{ phrases.cancel }}</slot>
@@ -152,6 +153,12 @@ export default {
     showOtherMonths: {
       type: Boolean,
       default: false
+    },
+    hourRange: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
 

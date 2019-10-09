@@ -42,7 +42,10 @@
           :hour-step="hourStep"
           :minute-step="minuteStep"
           :min-time="minTime"
-          :max-time="maxTime"></datetime-time-picker>
+          :max-time="maxTime"
+          :hour-range="hourRange"
+      >
+      </datetime-time-picker>
     </div>
     <div class="vdatetime-popup__actions">
       <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--cancel" @click="cancel">
@@ -137,6 +140,12 @@ export default {
     showOtherMonths: {
       type: Boolean,
       default: false
+    },
+    hourRange: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
 
