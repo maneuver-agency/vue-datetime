@@ -269,6 +269,10 @@ export default {
         datetime = this.popupMaxDatetime.set({ seconds: 0, milliseconds: 0 })
       }
 
+      if (this.defaultHour) {
+        datetime = datetime.set({ hour: this.defaultHour })
+      }
+
       if (this.minuteStep === 1) {
         return datetime
       }
@@ -276,8 +280,9 @@ export default {
       const roundedMinute = Math.round(datetime.minute / this.minuteStep) * this.minuteStep
 
       if (roundedMinute === 60) {
-        return datetime.plus({ hours: 1 }).set({ minute: 0 })
+        return datetime.set({ minute: 0 })
       }
+
 
       return datetime.set({ minute: roundedMinute })
     },

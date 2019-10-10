@@ -146,9 +146,6 @@ export default {
       default () {
         return []
       }
-    },
-    defaultHour: {
-      type: Number
     }
   },
 
@@ -161,7 +158,7 @@ export default {
       newDatetime: this.datetime,
       flowManager,
       step: flowManager.first(),
-      timePartsTouched: []
+      timePartsTouched: { hour: false , minute: false, suffix: false }
     }
   },
 
@@ -184,7 +181,7 @@ export default {
       return this.newDatetime.day
     },
     hour () {
-      return this.defaultHour || this.newDatetime.hour
+      return this.newDatetime.hour
     },
     minute () {
       return this.newDatetime.minute
@@ -222,7 +219,7 @@ export default {
   methods: {
     nextStep () {
       this.step = this.flowManager.next(this.step)
-      this.timePartsTouched = []
+      this.timePartsTouched = { hour: false , minute: false, suffix: false }
 
       if (this.step === 'end') {
         this.$emit('confirm', this.newDatetime)
@@ -265,21 +262,21 @@ export default {
     },
     onChangeTime ({ hour, minute, suffixTouched }) {
       if (suffixTouched) {
-        this.timePartsTouched['suffix'] = true
+        this.timePartsTouched.suffix = true
       }
 
       if (Number.isInteger(hour)) {
         this.newDatetime = this.newDatetime.set({ hour })
-        this.timePartsTouched['hour'] = true
+        this.timePartsTouched.hour = true
       }
 
       if (Number.isInteger(minute)) {
         this.newDatetime = this.newDatetime.set({ minute })
-        this.timePartsTouched['minute'] = true
+        this.timePartsTouched.minute = true
       }
 
-      const goNext = this.auto && this.timePartsTouched['hour'] && this.timePartsTouched['minute'] && (
-        this.timePartsTouched['suffix'] ||
+      const goNext = this.auto && this.timePartsTouched.hour && this.timePartsTouched.minute && (
+        this.timePartsTouched.suffix ||
         !this.use12Hour
       )
 
