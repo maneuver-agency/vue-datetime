@@ -36,6 +36,7 @@
           :show-header="showHeader"
           :show-other-months="showOtherMonths"
           :hour-range="hourRange"
+          :default-hour="defaultHour"
         >
         <template slot="button-cancel__internal" slot-scope="scope">
           <slot name="button-cancel" v-bind:step="scope.step">{{ phrases.cancel }}</slot>
@@ -159,6 +160,9 @@ export default {
       default () {
         return []
       }
+    },
+    defaultHour: {
+      type: Number
     }
   },
 
@@ -238,7 +242,7 @@ export default {
       this.$emit('input', datetime ? datetime.toISO() : '')
     },
     open (event) {
-      event.target.blur()
+      if (event && event.target) event.target.blur()
 
       this.isOpen = true
     },

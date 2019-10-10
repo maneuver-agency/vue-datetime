@@ -146,6 +146,9 @@ export default {
       default () {
         return []
       }
+    },
+    defaultHour: {
+      type: Number
     }
   },
 
@@ -181,7 +184,7 @@ export default {
       return this.newDatetime.day
     },
     hour () {
-      return this.newDatetime.hour
+      return this.defaultHour || this.newDatetime.hour
     },
     minute () {
       return this.newDatetime.minute
