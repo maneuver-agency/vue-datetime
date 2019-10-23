@@ -17,6 +17,7 @@
       <div class="vdatetime-calendar__month__weekday" v-for="weekday in weekdays">{{ weekday }}</div>
       <div class="vdatetime-calendar__month__day" v-for="day in days" @click="selectDay(day)" 
         :class="{
+          'vdatetime-calendar__month__day--today': day.today,
           'vdatetime-calendar__month__day--selected': day.selected,
           'vdatetime-calendar__month__day--disabled': day.disabled,
           'vdatetime-calendar__month__day--other-month': day.month !== newMonth,
@@ -93,10 +94,14 @@ export default {
     days () {
       return monthDays(this.newYear, this.newMonth, this.weekStart).map(({ day, month }) => ({
         number: day,
+        today: this.today.year === this.newYear && this.today.month === this.newMonth && this.today.day === day,
         selected: day && this.year === this.newYear && this.month === this.newMonth && month === this.month && this.day === day,
         disabled: !day || monthDayIsDisabled(this.minDate, this.maxDate, this.disabledDates, this.newYear, month, day),
         month
       }))
+    },
+    today () {
+      return DateTime.local()
     }
   },
 

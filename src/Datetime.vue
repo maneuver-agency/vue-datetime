@@ -37,6 +37,7 @@
           :show-other-months="showOtherMonths"
           :hour-range="hourRange"
           :default-hour="defaultHour"
+          :enforce-day-select="enforceDaySelect"
         >
         <template slot="button-cancel__internal" slot-scope="scope">
           <slot name="button-cancel" v-bind:step="scope.step">{{ phrases.cancel }}</slot>
@@ -163,6 +164,10 @@ export default {
     },
     defaultHour: {
       type: Number
+    },
+    enforceDaySelect: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -282,7 +287,6 @@ export default {
       if (roundedMinute === 60) {
         return datetime.set({ minute: 0 })
       }
-
 
       return datetime.set({ minute: roundedMinute })
     },

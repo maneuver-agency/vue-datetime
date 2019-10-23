@@ -51,7 +51,7 @@
       <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--cancel" @click="cancel">
         <slot name="button-cancel__internal" v-bind:step="step">{{ phrases.cancel }}</slot>
       </div>
-      <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--confirm" @click="confirm">
+      <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--confirm" @click="confirm" :disabled="!dirty">
         <slot name="button-confirm__internal" v-bind:step="step">{{ phrases.ok }}</slot>
       </div>
     </div>
@@ -146,6 +146,10 @@ export default {
       default () {
         return []
       }
+    },
+    enforceDaySelect: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -158,12 +162,17 @@ export default {
       newDatetime: this.datetime,
       flowManager,
       step: flowManager.first(),
-      timePartsTouched: { hour: false , minute: false, suffix: false }
+      dirty: false,
+      timePartsTouched: { hour: false, minute: false, suffix: false }
     }
   },
 
   created () {
     document.addEventListener('keydown', this.onKeyDown)
+
+    if (!this.enforceDaySelect) {
+      this.dirty = true
+    }
   },
 
   beforeDestroy () {
@@ -178,7 +187,7 @@ export default {
       return this.newDatetime.month
     },
     day () {
-      return this.newDatetime.day
+      return this.dirty ? this.newDatetime.day : 0
     },
     hour () {
       return this.newDatetime.hour
@@ -219,7 +228,7 @@ export default {
   methods: {
     nextStep () {
       this.step = this.flowManager.next(this.step)
-      this.timePartsTouched = { hour: false , minute: false, suffix: false }
+      this.timePartsTouched = { hour: false, minute: false, suffix: false }
 
       if (this.step === 'end') {
         this.$emit('confirm', this.newDatetime)
@@ -255,6 +264,7 @@ export default {
     },
     onChangeDate (year, month, day) {
       this.newDatetime = this.newDatetime.set({ year, month, day })
+      this.dirty = true
 
       if (this.auto) {
         this.nextStep()
