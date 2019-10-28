@@ -33,6 +33,7 @@
           :week-start="weekStart"
           :flow="flow"
           :title="title"
+          :subtitle="subtitle"
           :show-header="showHeader"
           :show-other-months="showOtherMonths"
           :hour-range="hourRange"
@@ -140,6 +141,9 @@ export default {
       type: Array
     },
     title: {
+      type: String
+    },
+    subtitle: {
       type: String
     },
     showHeader: {

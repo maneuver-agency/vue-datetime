@@ -2,6 +2,7 @@
   <div class="vdatetime-popup">
     <div class="vdatetime-popup__header">
       <div class="vdatetime-popup__title" v-if="title">{{ title }}</div>
+      <div class="vdatetime-popup__subtitle" v-if="subtitle">{{ subtitle }}</div>
       <template v-if="showHeader">
         <div class="vdatetime-popup__year" @click="showYear" v-if="type !== 'time'">{{ year }}</div>
         <div class="vdatetime-popup__date" @click="showMonth" v-if="type !== 'time'">{{ dateFormatted }}</div>
@@ -128,6 +129,9 @@ export default {
       type: Array
     },
     title: {
+      type: String
+    },
+    subtitle: {
       type: String
     },
     showHeader: {
