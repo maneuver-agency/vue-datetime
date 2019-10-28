@@ -48,6 +48,8 @@
       >
       </datetime-time-picker>
     </div>
+    <div class="vdatetime-popup__message" v-html="popupMessage" v-if="popupMessage">
+    </div>
     <div class="vdatetime-popup__actions">
       <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--cancel" @click="cancel">
         <slot name="button-cancel__internal" v-bind:step="step">{{ phrases.cancel }}</slot>
@@ -154,6 +156,9 @@ export default {
     enforceDaySelect: {
       type: Boolean,
       default: false
+    },
+    popupMessage: {
+      type: String
     }
   },
 

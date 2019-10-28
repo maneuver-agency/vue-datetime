@@ -39,6 +39,7 @@
           :hour-range="hourRange"
           :default-hour="defaultHour"
           :enforce-day-select="enforceDaySelect"
+          :popupMessage="popupMessage"
         >
         <template slot="button-cancel__internal" slot-scope="scope">
           <slot name="button-cancel" v-bind:step="scope.step">{{ phrases.cancel }}</slot>
@@ -172,6 +173,9 @@ export default {
     enforceDaySelect: {
       type: Boolean,
       default: false
+    },
+    popupMessage: {
+      type: String
     }
   },
 
