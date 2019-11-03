@@ -39,7 +39,8 @@
           :hour-range="hourRange"
           :default-hour="defaultHour"
           :enforce-day-select="enforceDaySelect"
-          :popupMessage="popupMessage"
+          :popup-message="popupMessage"
+          @change="popupChange"
         >
         <template slot="button-cancel__internal" slot-scope="scope">
           <slot name="button-cancel" v-bind:step="scope.step">{{ phrases.cancel }}</slot>
@@ -301,6 +302,9 @@ export default {
     setValue (event) {
       this.datetime = datetimeFromISO(event.target.value)
       this.emitInput()
+    },
+    popupChange (datetime) {
+      this.$emit('change', datetime)
     }
   }
 }

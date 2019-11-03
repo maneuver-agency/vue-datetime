@@ -260,12 +260,16 @@ export default {
     onChangeYear (year) {
       this.newDatetime = this.newDatetime.set({ year })
 
+      this.$emit('change', this.newDatetime)
+
       if (this.auto) {
         this.nextStep()
       }
     },
     onChangeMonth (month) {
       this.newDatetime = this.newDatetime.set({ month })
+
+      this.$emit('change', this.newDatetime)
 
       if (this.auto) {
         this.nextStep()
@@ -274,6 +278,8 @@ export default {
     onChangeDate (year, month, day) {
       this.newDatetime = this.newDatetime.set({ year, month, day })
       this.dirty = true
+
+      this.$emit('change', this.newDatetime)
 
       if (this.auto) {
         this.nextStep()
@@ -298,6 +304,8 @@ export default {
         this.timePartsTouched.suffix ||
         !this.use12Hour
       )
+
+      this.$emit('change', this.newDatetime)
 
       if (goNext) {
         this.nextStep()
@@ -372,8 +380,13 @@ export default {
 }
 
 .vdatetime-popup__actions {
-  padding: 0 20px 10px 30px;
+  padding: 0 30px 10px;
   text-align: right;
+}
+
+.vdatetime-popup__message {
+  padding: 20px 30px 0;
+  text-align: center;
 }
 
 .vdatetime-popup__actions__button {
