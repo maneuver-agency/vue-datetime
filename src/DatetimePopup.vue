@@ -385,7 +385,7 @@ export default {
 }
 
 .vdatetime-popup__message {
-  padding: 20px 30px 0;
+  padding: 12px 30px 0;
   text-align: center;
 }
 
