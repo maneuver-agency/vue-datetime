@@ -29,12 +29,12 @@ export function monthDays (year, month, weekStart) {
     .fill(null)
     .map((value, index) => {
       if (index + 1 <= firstDay) {
-        return { day: prevMonthDate.daysInMonth - firstDay + index + 1, month: prevMonthDate.month }
+        return { day: prevMonthDate.daysInMonth - firstDay + index + 1, month: prevMonthDate.month, year: prevMonthDate.year }
       }
       if (index >= firstDay + monthDate.daysInMonth) {
-        return { day: index + 1 - monthDate.daysInMonth - firstDay, month: nextMonthDate.month }
+        return { day: index + 1 - monthDate.daysInMonth - firstDay, month: nextMonthDate.month, year: nextMonthDate.year }
       }
-      return { day: index + 1 - firstDay, month: monthDate.month }
+      return { day: index + 1 - firstDay, month: monthDate.month, year: monthDate.year }
       // (index + 1 <= firstDay || index >= firstDay + monthDate.daysInMonth) ? 0 : (index + 1 - firstDay)
     })
 }

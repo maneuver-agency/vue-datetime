@@ -92,12 +92,13 @@ export default {
       return this.months[this.newMonth - 1]
     },
     days () {
-      return monthDays(this.newYear, this.newMonth, this.weekStart).map(({ day, month }) => ({
+      return monthDays(this.newYear, this.newMonth, this.weekStart).map(({ day, month, year }) => ({
         number: day,
         today: this.today.year === this.newYear && this.today.month === this.newMonth && this.today.day === day,
         selected: day && this.year === this.newYear && this.month === this.newMonth && month === this.month && this.day === day,
-        disabled: !day || monthDayIsDisabled(this.minDate, this.maxDate, this.disabledDates, this.newYear, month, day),
-        month
+        disabled: !day || monthDayIsDisabled(this.minDate, this.maxDate, this.disabledDates, year, month, day),
+        month,
+        year
       }))
     },
     today () {
@@ -114,6 +115,10 @@ export default {
       if (day.month !== this.newMonth) {
         // User clicked a day in the previous or next month
         this.newDate = this.newDate.set({ month: day.month })
+      }
+
+      if (day.year !== this.newYear) {
+        this.newDate = this.newDate.set({ year: day.year })
       }
 
       this.$emit('change', this.newYear, this.newMonth, day.number)
