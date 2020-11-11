@@ -1,52 +1,71 @@
 <template>
   <div class="vdatetime">
     <slot name="before"></slot>
-    <input class="vdatetime-input"
-           :class="inputClass"
-           :style="inputStyle"
-           :id="inputId"
-           type="text"
-           :value="inputValue"
-           v-bind="$attrs"
-           v-on="$listeners"
-           @click="open"
-           @focus="open">
-    <input v-if="hiddenName" type="hidden" :name="hiddenName" :value="value" @input="setValue">
+    <input
+      class="vdatetime-input"
+      :class="inputClass"
+      :style="inputStyle"
+      :id="inputId"
+      type="text"
+      :value="inputValue"
+      v-bind="$attrs"
+      v-on="$listeners"
+      @click="open"
+      @focus="open"
+    />
+    <input
+      v-if="hiddenName"
+      type="hidden"
+      :name="hiddenName"
+      :value="value"
+      @input="setValue"
+    />
     <slot name="after"></slot>
     <transition-group name="vdatetime-fade" tag="div">
-      <div key="overlay" v-if="isOpen" class="vdatetime-overlay" @click.self="cancel"></div>
+      <div
+        key="overlay"
+        v-if="isOpen"
+        class="vdatetime-overlay"
+        @click.self="cancel"
+      ></div>
       <datetime-popup
-          key="popup"
-          v-if="isOpen"
-          :type="type"
-          :datetime="popupDate"
-          :phrases="phrases"
-          :use12-hour="use12Hour"
-          :hour-step="hourStep"
-          :minute-step="minuteStep"
-          :min-datetime="popupMinDatetime"
-          :max-datetime="popupMaxDatetime"
-          :disabled-dates="popupDisabledDates"
-          @confirm="confirm"
-          @cancel="cancel"
-          :auto="auto"
-          :week-start="weekStart"
-          :flow="flow"
-          :title="title"
-          :subtitle="subtitle"
-          :show-header="showHeader"
-          :show-other-months="showOtherMonths"
-          :hour-range="hourRange"
-          :default-hour="defaultHour"
-          :enforce-day-select="enforceDaySelect"
-          :popup-message="popupMessage"
-          @change="popupChange"
-        >
+        key="popup"
+        v-if="isOpen"
+        :type="type"
+        :datetime="popupDate"
+        :phrases="phrases"
+        :use12-hour="use12Hour"
+        :hour-step="hourStep"
+        :minute-step="minuteStep"
+        :min-datetime="popupMinDatetime"
+        :max-datetime="popupMaxDatetime"
+        :disabled-dates="popupDisabledDates"
+        @confirm="confirm"
+        @cancel="cancel"
+        :auto="auto"
+        :week-start="weekStart"
+        :flow="flow"
+        :title="title"
+        :subtitle="subtitle"
+        :show-header="showHeader"
+        :show-other-months="showOtherMonths"
+        :hour-range="hourRange"
+        :default-hour="defaultHour"
+        :enforce-day-select="enforceDaySelect"
+        :popup-message="popupMessage"
+        @change="popupChange"
+        :disabled-hours="disabledHours"
+        :hour-labels="hourLabels"
+      >
         <template slot="button-cancel__internal" slot-scope="scope">
-          <slot name="button-cancel" v-bind:step="scope.step">{{ phrases.cancel }}</slot>
+          <slot name="button-cancel" v-bind:step="scope.step">{{
+            phrases.cancel
+          }}</slot>
         </template>
         <template slot="button-confirm__internal" slot-scope="scope">
-          <slot name="button-confirm" v-bind:step="scope.step">{{ phrases.ok }}</slot>
+          <slot name="button-confirm" v-bind:step="scope.step">{{
+            phrases.ok
+          }}</slot>
         </template>
       </datetime-popup>
     </transition-group>
@@ -177,6 +196,19 @@ export default {
     },
     popupMessage: {
       type: String
+    },
+    hourLabels: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    // In the format of [{ hour: 9, value: 'label' }]
+    disabledHours: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
 
@@ -217,37 +249,50 @@ export default {
       }
 
       if (typeof format === 'string') {
-        return this.datetime ? DateTime.fromISO(this.datetime).setZone(this.zone).toFormat(format) : ''
+        return this.datetime
+          ? DateTime.fromISO(this.datetime).setZone(this.zone).toFormat(format)
+          : ''
       } else {
-        return this.datetime ? this.datetime.setZone(this.zone).toLocaleString(format) : ''
+        return this.datetime
+          ? this.datetime.setZone(this.zone).toLocaleString(format)
+          : ''
       }
     },
     popupDate () {
-      return this.datetime ? this.datetime.setZone(this.zone) : this.newPopupDatetime()
+      return this.datetime
+        ? this.datetime.setZone(this.zone)
+        : this.newPopupDatetime()
     },
     popupMinDatetime () {
-      return this.minDatetime ? DateTime.fromISO(this.minDatetime).setZone(this.zone) : null
+      return this.minDatetime
+        ? DateTime.fromISO(this.minDatetime).setZone(this.zone)
+        : null
     },
     popupMaxDatetime () {
-      return this.maxDatetime ? DateTime.fromISO(this.maxDatetime).setZone(this.zone) : null
+      return this.maxDatetime
+        ? DateTime.fromISO(this.maxDatetime).setZone(this.zone)
+        : null
     },
-    popupDisabledDates  () {
-      return this.disabledDates.map(item => {
-        if (typeof item === 'number') {
-          return item
-        }
-        if (typeof item === 'string') {
-          const d = DateTime.fromISO(item).setZone(this.zone)
-          return d.isValid ? d : null
-        }
-      })
-      .filter(item => !!item) // remove null values
+    popupDisabledDates () {
+      return this.disabledDates
+        .map((item) => {
+          if (typeof item === 'number') {
+            return item
+          }
+          if (typeof item === 'string') {
+            const d = DateTime.fromISO(item).setZone(this.zone)
+            return d.isValid ? d : null
+          }
+        })
+        .filter((item) => !!item) // remove null values
     }
   },
 
   methods: {
     emitInput () {
-      let datetime = this.datetime ? this.datetime.setZone(this.valueZone) : null
+      let datetime = this.datetime
+        ? this.datetime.setZone(this.valueZone)
+        : null
 
       if (datetime && this.type === 'date') {
         datetime = startOfDay(datetime)
@@ -273,7 +318,9 @@ export default {
       this.close()
     },
     newPopupDatetime () {
-      let datetime = DateTime.utc().setZone(this.zone).set({ seconds: 0, milliseconds: 0 })
+      let datetime = DateTime.utc()
+        .setZone(this.zone)
+        .set({ seconds: 0, milliseconds: 0 })
 
       if (this.popupMinDatetime && datetime < this.popupMinDatetime) {
         datetime = this.popupMinDatetime.set({ seconds: 0, milliseconds: 0 })
@@ -291,7 +338,8 @@ export default {
         return datetime
       }
 
-      const roundedMinute = Math.round(datetime.minute / this.minuteStep) * this.minuteStep
+      const roundedMinute =
+        Math.round(datetime.minute / this.minuteStep) * this.minuteStep
 
       if (roundedMinute === 60) {
         return datetime.set({ minute: 0 })
@@ -313,7 +361,7 @@ export default {
 <style>
 .vdatetime-fade-enter-active,
 .vdatetime-fade-leave-active {
-  transition: opacity .4s;
+  transition: opacity 0.4s;
 }
 
 .vdatetime-fade-enter,
@@ -329,6 +377,6 @@ export default {
   bottom: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.5);
-  transition: opacity .5s;
+  transition: opacity 0.5s;
 }
 </style>
